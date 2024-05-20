@@ -1,0 +1,27 @@
+---
+---
+
+// https://coolors.co/31393c-2176ff-33a1fd-fdca40-f79824
+$gunmetal: #31393cff;
+$blue-crayola: #2176ffff;
+$celestial-blue: #33a1fdff;
+$sunglow: #fdca40ff;
+$carrot-orange: #f79824ff;
+
+// Headers
+$header-heading-color: $sunglow !default;
+$header-bg-color: $blue-crayola !default;
+$header-bg-color-secondary: $celestial-blue !default;
+
+// Text
+$section-headings-color: $blue-crayola !default;
+$body-text-color: $gunmetal !default;
+$body-link-color: $celestial-blue !default;
+// $blockquote-text-color: #819198 !default;
+
+// // Borders
+// $border-color: #dce6f0 !default;
+// $table-border-color: #e9ebec !default;
+// $hr-border-color: #eff0f1 !default;
+
+@import "{{ site.theme }}";
