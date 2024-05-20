@@ -13,3 +13,4 @@ plugins:
 
 # Theme settings
 show_downloads: false
+snow: true

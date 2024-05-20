@@ -12,6 +12,11 @@
 	<meta name="theme-color" content="#157878">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+	{% if site.snow %}
+		{% unless page.hide_snow %}
+			<script src="{{ base.url | prepend: site.url }}/assets/js/snowstorm.js"></script>
+		{% endunless %}
+	{% endif %}
 	{% include head-custom.html %}
 </head>
 
