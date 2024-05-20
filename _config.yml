@@ -1,0 +1,15 @@
+title: Chloe's Website
+description: >-
+  This is Chloe's website!
+baseurl: ""
+url: "https://chloe.standen.link"
+
+# Build settings
+theme: minima
+remote_theme: pages-themes/cayman@v0.2.0
+plugins:
+  - jekyll-feed
+  - jekyll-remote-theme
+
+# Theme settings
+show_downloads: false
