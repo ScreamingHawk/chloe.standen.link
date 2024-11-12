@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pop the Lock</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #2C3E50;
+        }
+
+        .lock {
+            width: 200px;
+            height: 200px;
+            background-color: #E74C3C;
+            border-radius: 50%;
+            position: relative;
+            border: 10px solid #C0392B;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
+            cursor: pointer;
+        }
+
+        .lock::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-color: #F1C40F;
+            border-radius: 20px;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .spinner {
+            position: absolute;
+            width: 4px;
+            height: 50%;
+            background-color: #fff;
+            left: 50%;
+            transform-origin: bottom center;
+            transform: translateX(-50%);
+        }
+
+        .target {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #2ECC71;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .timer {
+            position: fixed;
+            top: 20px;
+            font-size: 48px;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer">30</div>
+    <div class="lock">
+        <div class="spinner"></div>
+        <div class="target"></div>
+    </div>
+
+    <script>
+        const lock = document.querySelector('.lock');
+        const spinner = document.querySelector('.spinner');
+        const target = document.querySelector('.target');
+        const timerDisplay = document.querySelector('.timer');
+        
+        let angle = 0;
+        let speed = 1;
+        let direction = 1;
+        let score = 0;
+        let isGameOver = false;
+        let targetAngle = Math.random() * 360;
+        let timeLeft = 30;
+
+        // Position the target dot
+        function positionTarget() {
+            const radius = 80; // Distance from center
+            const x = radius * Math.cos((targetAngle - 90) * Math.PI / 180);
+            const y = radius * Math.sin((targetAngle - 90) * Math.PI / 180);
+            target.style.left = `${100 + x}px`;
+            target.style.top = `${100 + y}px`;
+        }
+
+        // Main game loop
+        function gameLoop() {
+            if (isGameOver) return;
+
+            angle += speed * direction;
+            spinner.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Check if click was successful
+        function checkClick() {
+            const currentAngle = ((angle % 360) + 360) % 360;
+            const difference = Math.abs(currentAngle - targetAngle);
+            
+            if (difference <= 15 || difference >= 345) {
+                // Success!
+                score++;
+                timeLeft--; // Decrease timer on successful hit
+                timerDisplay.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    // Win condition!
+                    isGameOver = true;
+                    celebrate();
+                    setTimeout(() => {
+                        alert(`You won! Final score: ${score}`);
+                        resetGame();
+                        gameLoop(); // Restart the game loop
+                    }, 1000);
+                    return;
+                }
+
+                direction *= -1; // Change direction
+                targetAngle = Math.random() * 360; // New target position
+                positionTarget();
+                speed += 0.2; // Increased the speed boost for more challenge
+            } else {
+                // Game Over
+                isGameOver = true;
+                alert(`Game Over! Score: ${score}`);
+                resetGame();
+                gameLoop(); // Restart the game loop
+            }
+        }
+
+        function celebrate() {
+            // Fire confetti from the center
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+            // Fire from the left
+            confetti({
+                particleCount: 50,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 }
+            });
+            // Fire from the right
+            confetti({
+                particleCount: 50,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 }
+            });
+        }
+
+        // Reset game
+        function resetGame() {
+            isGameOver = true;  // Stop the current game loop
+            angle = 0;
+            speed = 1;         // Reduced from 2 to 1
+            direction = 1;
+            score = 0;
+            targetAngle = Math.random() * 360;
+            positionTarget();
+            timeLeft = 30;
+            timerDisplay.textContent = timeLeft;
+            isGameOver = false; // Allow the new game loop to start
+        }
+
+        // Event listeners
+        lock.addEventListener('click', checkClick);
+
+        // Start the game
+        positionTarget();
+        gameLoop();
+    </script>
+</body>
+</html>
